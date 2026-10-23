@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GreenQuiz - Web Technologies Quiz</title>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Our own styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <header class="topbar">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="brand">
+        <span class="brand-logo">Q</span>
+        <div>
+          <div class="brand-name">GreenQuiz</div>
+          <div class="brand-tag">Web Technologies Quiz</div>
+        </div>
+      </div>
+    
+      <button id="themeBtn" class="btn btn-sm btn-outline-light" type="button">🌙 Dark</button>
+    </div>
+  </header>
+
+  <main class="container py-4">
+
+    <section id="setupSection" class="card-box">
+      <div class="text-center">
+        <p class="eyebrow">WELCOME TO GREENQUIZ</p>
+        <h1 class="hero-title">Let’s Start the Quiz</h1>
+        <p class="hero-text">Select your options below and test your knowledge.</p>
+      </div>
+
+      <form id="setupForm" class="mt-4">
+        <div class="mb-3">
+          <label for="nameInput" class="form-label fw-semibold">
+            Student Name <span class="text-muted fw-normal">(optional)</span>
+          </label>
+          <input type="text" id="nameInput" class="form-control" maxlength="40" placeholder="e.g. Bilal">
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label for="topicSelect" class="form-label fw-semibold">Select quiz topic</label>
+            <select id="topicSelect" class="form-select">
+              <option value="ALL" selected>All Topics — Mixed Quiz</option>
+              <option value="HTML">HTML</option>
+              <option value="CSS">CSS</option>
+              <option value="JavaScript">JavaScript</option>
+              <option value="Bootstrap">Bootstrap</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="countSelect" class="form-label fw-semibold">Number of questions</label>
+            <select id="countSelect" class="form-select">
+              <option value="5">5 questions</option>
+              <option value="10">10 questions</option>
+              <option value="15">15 questions</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-3">
+            <label for="passSelect" class="form-label fw-semibold">Passing percentage</label>
+            <select id="passSelect" class="form-select">
+              <option value="40">40%</option>
+              <option value="50" selected>50%</option>
+              <option value="60">60%</option>
+              <option value="70">70%</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Time limit and question order (information only) -->
+        <div class="row g-3 mt-0">
+          <div class="col-6">
+            <label for="timeInput" class="form-label fw-semibold">Time limit (whole quiz)</label>
+            <input type="text" id="timeInput" class="form-control" value="2.5 minutes" readonly>
+          </div>
+          <div class="col-6">
+            <label for="orderInput" class="form-label fw-semibold">Question order</label>
+            <input type="text" id="orderInput" class="form-control" value="Random" readonly>
+          </div>
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary-custom">Next Step</button>
+        </div>
+      </form>
+    </section>
+
+    
+    <section id="instructionsSection" class="card-box d-none">
+      <p class="eyebrow">BEFORE YOU START</p>
+      <h2 class="hero-title">Instructions Before Starting</h2>
+
+
+      <div class="row g-3 my-3 text-center">
+        <div class="col-6 col-md-3"><div class="info-tile"><div id="infoTopic" class="info-num">-</div><div class="info-label">Topic</div></div></div>
+        <div class="col-6 col-md-3"><div class="info-tile"><div id="infoCount" class="info-num">-</div><div class="info-label">Questions</div></div></div>
+        <div class="col-6 col-md-3"><div class="info-tile"><div id="infoTime" class="info-num">-</div><div class="info-label">Time limit</div></div></div>
+        <div class="col-6 col-md-3"><div class="info-tile"><div id="infoPass" class="info-num">-</div><div class="info-label">Pass mark</div></div></div>
+      </div>
+
+     
+      <div id="noticeBox" class="alert alert-warning d-none"></div>
+
+      <ul class="rules">
+        <li>Each question has 4 options and only one is correct.</li>
+        <li>When you pick an answer, the correct option turns <strong class="text-correct">green</strong> and a wrong choice turns <strong class="text-wrong">red</strong>.</li>
+        <li>You can change your answer until you submit the quiz.</li>
+        <li>Use Previous, Next or the question numbers to move around.</li>
+        <li>One timer runs for the whole quiz and it does not reset when you change questions.</li>
+        <li>The quiz is submitted automatically when the timer reaches 00:00.</li>
+      </ul>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button id="backBtn" class="btn btn-outline-custom" type="button">← Back</button>
+        <button id="startBtn" class="btn btn-primary-custom" type="button">Start Quiz →</button>
+      </div>
+    </section>
+
+    <section id="quizSection" class="card-box d-none">
+
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span id="counter" class="counter">Question 1 of 5</span>
+        <span id="timer" class="timer">⏱ 00:00</span>
+      </div>
+
+  
+      <div id="progress" class="segments mb-2"></div>
+      <div class="legend mb-3">
+        <span><i class="dot dot-correct"></i>Correct</span>
+        <span><i class="dot dot-wrong"></i>Incorrect</span>
+        <span><i class="dot dot-current"></i>Current</span>
+        <span><i class="dot dot-remaining"></i>Remaining</span>
+      </div>
+
+      <h2 id="questionText" class="question-text">Question goes here</h2>
+
+    
+      <div id="options" class="options"></div>
+      <p class="small text-muted mt-2 mb-0">You can change your answer until you submit the quiz.</p>
+
+ 
+      <div class="d-flex justify-content-between mt-4">
+        <button id="prevBtn" class="btn btn-outline-custom" type="button">← Previous</button>
+        <button id="nextBtn" class="btn btn-primary-custom" type="button">Next →</button>
+      </div>
+
+      <hr>
+
+
+      <div id="navigator" class="navigator"></div>
+
+      <div class="text-center mt-3">
+        <button id="submitBtn" class="btn btn-submit" type="button">Submit Quiz</button>
+      </div>
+    </section>
+
+
+    <section id="resultSection" class="card-box d-none">
+      <div class="text-center">
+        <p class="eyebrow">QUIZ COMPLETED</p>
+        <h2 id="resultMessage" class="hero-title">Your Result</h2>
+
+        <div class="score-circle"><span id="percentText">0%</span></div>
+        <p class="hero-text mb-2">Score: <strong id="scoreText">0 / 0</strong> &middot; Time taken: <strong id="timeTakenText">00:00</strong></p>
+        <span id="passBadge" class="pass-badge">PASS</span>
+
+        <div class="row g-3 my-3 justify-content-center">
+          <div class="col-4"><div class="info-tile good"><div id="correctCount" class="info-num">0</div><div class="info-label">Correct</div></div></div>
+          <div class="col-4"><div class="info-tile bad"><div id="wrongCount" class="info-num">0</div><div class="info-label">Incorrect</div></div></div>
+          <div class="col-4"><div class="info-tile warn"><div id="skippedCount" class="info-num">0</div><div class="info-label">Unanswered</div></div></div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
+          <button id="pdfBtn" class="btn btn-outline-custom" type="button">⬇ Download Quiz Report</button>
+          <button id="retakeBtn" class="btn btn-primary-custom" type="button">Retake Quiz ↻</button>
+          <button id="newQuizBtn" class="btn btn-outline-custom" type="button">New Quiz</button>
+        </div>
+      </div>
+
+      <hr class="my-4">
+
+      <h3 class="review-title">Answer Review</h3>
+      <table class="table review-table align-middle">
+        <thead>
+          <tr>
+            <th>Q#</th>
+            <th>Question</th>
+            <th>Your answer</th>
+            <th>Correct answer</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody id="reviewBody"></tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <footer class="footer text-center"> GreenQuiz | Web Technologies Assignment 2 </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+  <script src="questions.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
